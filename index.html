@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About — Xoni</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:      #0a0a0f;
+      --surface: #111118;
+      --border:  #1e1e2e;
+      --accent:  #6c63ff;
+      --accent2: #ff4d6d;
+      --text:    #e2e2f0;
+      --muted:   #5a5a7a;
+      --mono:    'JetBrains Mono', monospace;
+      --sans:    'Space Grotesk', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 48px 48px;
+      opacity: .3;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* glow orb */
+    body::after {
+      content: '';
+      position: fixed;
+      top: -120px; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(108,99,255,.15) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 80px 24px 120px;
+    }
+
+    /* ── scroll reveal ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity .6s ease, transform .6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal-delay-1 { transition-delay: .1s; }
+    .reveal-delay-2 { transition-delay: .2s; }
+    .reveal-delay-3 { transition-delay: .3s; }
+    .reveal-delay-4 { transition-delay: .4s; }
+
+    /* ── hero ── */
+    .hero { margin-bottom: 72px; }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .18em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--accent);
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 4rem);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      margin-bottom: 24px;
+    }
+    h1 .accent  { color: var(--accent); }
+    h1 .accent2 { color: var(--accent2); }
+
+    .bio {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: #9898b8;
+      max-width: 560px;
+    }
+
+    /* ── info chips ── */
+    .info-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 28px;
+    }
+    .chip {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 6px 14px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .chip .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+    .chip.red .dot { background: var(--accent2); }
+    @keyframes pulse {
+      0%,100% { opacity:1; transform:scale(1); }
+      50%      { opacity:.5; transform:scale(.8); }
+    }
+
+    /* ── divider ── */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 56px 0;
+    }
+
+    .section-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: .2em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    /* ── progress bars ── */
+    .skill-bars { display: flex; flex-direction: column; gap: 22px; }
+
+    .skill-row { }
+
+    .skill-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 9px;
+    }
+    .skill-name {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--text);
+      font-weight: 700;
+    }
+    .skill-pct {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .bar-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 1.2s cubic-bezier(.22,1,.36,1);
+    }
+    .bar-fill.purple { background: linear-gradient(90deg, #6c63ff, #a78bfa); }
+    .bar-fill.red    { background: linear-gradient(90deg, #ff4d6d, #ff8fa3); }
+    .bar-fill.green  { background: linear-gradient(90deg, #22d3a3, #6ee7b7); }
+    .bar-fill.blue   { background: linear-gradient(90deg, #38bdf8, #7dd3fc); }
+
+    /* ── focus cards ── */
+    .focus-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      margin-bottom: 14px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s;
+    }
+    .focus-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      border-radius: 3px 0 0 3px;
+    }
+    .focus-card:hover {
+      border-color: #2e2e4e;
+      transform: translateX(4px);
+    }
+    .focus-card h3 { font-size: .9rem; font-weight: 600; margin-bottom: 6px; }
+    .focus-card p  { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── contact ── */
+    .contact-links { display: flex; flex-direction: column; gap: 12px; }
+
+    .contact-link {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color .2s, transform .15s;
+    }
+    .contact-link:hover {
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .contact-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: #1a1a2e;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .contact-icon svg { width: 18px; height: 18px; }
+    .contact-meta { display: flex; flex-direction: column; gap: 2px; }
+    .contact-meta span:first-child { font-size: .78rem; color: var(--muted); font-family: var(--mono); }
+    .contact-meta span:last-child  { font-size: .95rem; font-weight: 500; }
+    .arrow { margin-left: auto; color: var(--muted); font-size: 18px; transition: color .2s; }
+    .contact-link:hover .arrow { color: var(--accent); }
+
+    .footer-note {
+      margin-top: 80px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: .05em;
+    }
+
+    @media (max-width: 480px) {
+      main { padding: 60px 18px 100px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity:1; transform:none; }
+      .bar-fill { transition: none; }
+    }
+  </style>
+</head>
+<body>
+<main>
+
+  <!-- HERO -->
+  <section class="hero">
+    <p class="eyebrow reveal">About Me</p>
+    <h1 class="reveal reveal-delay-1">
+      I'm <span class="accent">Xoni</span>,<br/>
+      an <span class="accent2">MLBB</span> Developer.
+    </h1>
+    <p class="bio reveal reveal-delay-2">
+      I build tools and apps around Mobile Legends: Bang Bang — from injectors and
+      customization utilities to asset pipelines and data systems. I care about clean UIs,
+      tight code, and things that actually work.
+    </p>
+    <div class="info-chips reveal reveal-delay-3">
+      <span class="chip"><span class="dot"></span>Age 17</span>
+      <span class="chip red"><span class="dot"></span>Student</span>
+      <span class="chip"><span class="dot" style="background:#22d3a3"></span>MLBB Developer</span>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- SKILL BARS -->
+  <section>
+    <p class="section-label reveal">Skill Level</p>
+    <div class="skill-bars">
+
+      <div class="skill-row reveal reveal-delay-1" data-bar="50" data-color="purple">
+        <div class="skill-header">
+          <span class="skill-name">HTML / CSS / JS</span>
+          <span class="skill-pct">50%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill purple"></div></div>
+      </div>
+
+      <div class="skill-row reveal reveal-delay-2" data-bar="45" data-color="blue">
+        <div class="skill-header">
+          <span class="skill-name">Python</span>
+          <span class="skill-pct">45%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill blue"></div></div>
+      </div>
+
+      <div class="skill-row reveal reveal-delay-3" data-bar="90" data-color="green">
+        <div class="skill-header">
+          <span class="skill-name">Java</span>
+          <span class="skill-pct">90%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill green"></div></div>
+      </div>
+
+      <div class="skill-row reveal reveal-delay-4" data-bar="70" data-color="red">
+        <div class="skill-header">
+          <span class="skill-name">Kotlin</span>
+          <span class="skill-pct">70%</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill red"></div></div>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- WHAT I BUILD -->
+  <section>
+    <p class="section-label reveal">What I Build</p>
+    <div class="focus-card reveal reveal-delay-1">
+      <h3>MLBB Tools & Injectors</h3>
+      <p>Android apps for MLBB customization — skin changers, UI injectors, and in-game asset mods.</p>
+    </div>
+    <div class="focus-card reveal reveal-delay-2">
+      <h3>Asset Extraction & Pipelines</h3>
+      <p>Python scripts to extract hero, skin, and item assets from Unity3D MLBB bundle files.</p>
+    </div>
+    <div class="focus-card reveal reveal-delay-3">
+      <h3>MLBB Data & JSON Datasets</h3>
+      <p>Structured datasets with hero/skin/item data and CDN-linked image assets for developers.</p>
+    </div>
+  </section>
+
+  <hr class="divider"/>
+
+  <!-- CONTACT -->
+  <section>
+    <p class="section-label reveal">Find Me</p>
+    <div class="contact-links">
+
+      <a class="contact-link reveal reveal-delay-1" href="https://t.me/xiotools" target="_blank" rel="noopener">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-16.5 6.7a2.25 2.25 0 0 0 .126 4.21l3.7 1.154 1.863 5.895a.75.75 0 0 0 1.27.285l2.234-2.46 4.101 3.018a2.25 2.25 0 0 0 3.53-1.39l2.75-15.5a2.25 2.25 0 0 0-2.052-2.127z" fill="#6c63ff"/>
+          </svg>
+        </div>
+        <div class="contact-meta">
+          <span>Telegram Channel</span>
+          <span>@xiotools</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="contact-link reveal reveal-delay-2" href="https://t.me/xoni_l" target="_blank" rel="noopener">
+        <div class="contact-icon">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="8" r="4" fill="#ff4d6d"/>
+            <path d="M4 20c0-4 3.582-7 8-7s8 3 8 7" stroke="#ff4d6d" stroke-width="2" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="contact-meta">
+          <span>Telegram</span>
+          <span>@xoni_l</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+    </div>
+  </section>
+
+  <p class="footer-note reveal">// xoni · mlbb developer · 2025</p>
+
+</main>
+
+<script>
+  // ── Scroll reveal ──
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+
+        // trigger bar fill if this element has data-bar
+        const fill = e.target.querySelector('.bar-fill');
+        if (fill) {
+          const pct = e.target.dataset.bar;
+          setTimeout(() => { fill.style.width = pct + '%'; }, 100);
+        }
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // also observe skill-rows directly (they contain bar-fill)
+  document.querySelectorAll('.skill-row').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
